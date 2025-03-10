@@ -31,7 +31,7 @@ export class PayloadSession {
     let userID: string | number
 
     const userQueryResults = await payload.find({
-      collection: this.#collections.customersCollectionSlug,
+      collection: "customers",
       where: {
         email: {
           equals: accountInfo.email,
@@ -45,7 +45,7 @@ export class PayloadSession {
       }
 
       const newUser = await payload.create({
-        collection: this.#collections.customersCollectionSlug,
+        collection: "customers",
         data: {
           email: accountInfo.email,
           emailVerified: true,
