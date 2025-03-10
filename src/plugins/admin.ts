@@ -65,7 +65,7 @@ export const adminAuthPlugin =
     const session = new PayloadSession(
       {
         accountsCollectionSlug: accounts?.slug ?? "accounts",
-        usersCollectionSlug: config.admin.user!,
+        customersCollectionSlug: config.admin.user!,
       },
       allowSignUp,
       successPath,
