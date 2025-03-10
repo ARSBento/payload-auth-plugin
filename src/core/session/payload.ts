@@ -6,7 +6,6 @@ import { hashCode } from "../utils/hash.js"
 
 type Collections = {
   accountsCollectionSlug: string
-  usersCollectionSlug: string
   customersCollectionSlug: string
 }
 
