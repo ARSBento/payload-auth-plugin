@@ -6,7 +6,7 @@ export function buildAccountsCollection(
     slug: string
     hidden: boolean
   },
-  usersCollectionSlug: string,
+  customersCollectionSlug: string,
 ) {
   const accountsCollection: CollectionConfig = {
     slug: account.slug,
@@ -32,7 +32,7 @@ export function buildAccountsCollection(
       {
         name: "user",
         type: "relationship",
-        relationTo: usersCollectionSlug,
+        relationTo: customersCollectionSlug,
         hasMany: false,
         required: true,
         label: "User",
