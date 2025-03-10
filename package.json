@@ -59,7 +59,8 @@
     "build": "bun run script/build.ts",
     "format": "./script/format",
     "release": "bun run build && changeset publish",
-    "changelog": "./script/changelog.sh"
+    "changelog": "./script/changelog.sh",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "payload": "latest"
