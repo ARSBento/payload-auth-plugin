@@ -7,6 +7,7 @@ import { hashCode } from "../utils/hash.js"
 type Collections = {
   accountsCollectionSlug: string
   usersCollectionSlug: string
+  customersCollectionSlug: string
 }
 
 export class PayloadSession {
@@ -31,7 +32,7 @@ export class PayloadSession {
     let userID: string | number
 
     const userQueryResults = await payload.find({
-      collection: this.#collections.usersCollectionSlug,
+      collection: this.#collections.customersCollectionSlug,
       where: {
         email: {
           equals: accountInfo.email,
@@ -45,7 +46,7 @@ export class PayloadSession {
       }
 
       const newUser = await payload.create({
-        collection: this.#collections.usersCollectionSlug,
+        collection: this.#collections.customersCollectionSlug,
         data: {
           email: accountInfo.email,
           emailVerified: true,
@@ -77,9 +78,6 @@ export class PayloadSession {
     }
 
     if (accounts.docs.length > 0) {
-      data["sub"] = accountInfo.sub
-      data["issuerName"] = issuerName
-      data["user"] = userID
       await payload.update({
         collection: this.#collections.accountsCollectionSlug,
         where: {
@@ -116,7 +114,7 @@ export class PayloadSession {
     const fieldsToSign = {
       id: userID,
       email: accountInfo.email,
-      collection: this.#collections.usersCollectionSlug,
+      collection: this.#collections.customersCollectionSlug,
     }
 
     const cookieExpiration = getCookieExpiration({
@@ -129,7 +127,7 @@ export class PayloadSession {
 
     const cookies: string[] = []
     cookies.push(
-      `${payload.config.cookiePrefix!}-token=${token};Path=/;HttpOnly;SameSite=lax;Expires=${cookieExpiration.toUTCString()}`,
+      `${payload.config.cookiePrefix!}-token=${token};Path=/;HttpOnly;SameSite=lax;Expires=${cookieExpiration.toString()}`,
     )
     const expired = "Thu, 01 Jan 1970 00:00:00 GMT"
     cookies.push(
