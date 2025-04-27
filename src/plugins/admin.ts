@@ -1,6 +1,6 @@
 import type { Config, Plugin } from "payload"
 import { EndpointFactory } from "../core/endpoints.js"
-import { ProvidersConfig } from "../types.js"
+import { ProvidersConfig, AccountInfo } from "../types.js"
 import { PayloadSession } from "../core/session/payload.js"
 import {
   InvalidServerURL,
@@ -37,6 +37,10 @@ interface PluginOptions {
    * @default false
    */
   allowSignUp?: boolean
+
+  redirectFunctions?: {
+    [key: string]: (redirect_context: string, accountInfo: AccountInfo) => {success: boolean, redirect: string}
+  }
 }
 
 export const adminAuthPlugin =
@@ -69,6 +73,7 @@ export const adminAuthPlugin =
       },
       allowSignUp,
       successPath,
+      pluginOptions.redirectFunctions,
     )
     const mappedProviders = mapProviders(providers)
     const endpoints = new EndpointFactory(mappedProviders)
@@ -94,6 +99,7 @@ export const adminAuthPlugin =
             scope,
             issuerName,
             basePayload,
+
           ),
       }),
     ]
