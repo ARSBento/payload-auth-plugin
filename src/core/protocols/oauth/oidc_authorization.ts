@@ -30,6 +30,10 @@ export async function OIDCAuthorization(
   const cookieMaxage = new Date(Date.now() + 300 * 1000)
 
   const authorizationURL = new URL(as.authorization_endpoint!)
+  const redirect_action = request.query.redirect_action as string
+  const redirect_context = request.query.redirect_context as string
+  authorizationURL.searchParams.set("redirect_action", redirect_action)
+  authorizationURL.searchParams.set("redirect_context", redirect_context)
   authorizationURL.searchParams.set("client_id", client.client_id)
   authorizationURL.searchParams.set("redirect_uri", callback_url.toString())
   authorizationURL.searchParams.set("response_type", "code")

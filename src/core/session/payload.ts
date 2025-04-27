@@ -13,14 +13,21 @@ export class PayloadSession {
   readonly #collections: Collections
   readonly #successPath: string | undefined
   readonly #allowSignUp: boolean
+  readonly #redirectFunctions: {
+    [key: string]: (redirect_context: string, accountInfo: AccountInfo) => {success: boolean, redirect: string}
+  }
   constructor(
     collections: Collections,
     allowSignUp?: boolean,
     successPath?: string,
+    redirectFunctions?: {
+      [key: string]: (redirect_context: string, accountInfo: AccountInfo) => {success: boolean, redirect: string}
+    }
   ) {
     this.#collections = collections
     this.#allowSignUp = !!allowSignUp
     this.#successPath = successPath
+    this.#redirectFunctions = redirectFunctions ?? {}
   }
   async #upsertAccount(
     accountInfo: AccountInfo,
@@ -29,6 +36,7 @@ export class PayloadSession {
     payload: BasePayload,
   ) {
     let userID: string | number
+    
 
     const userQueryResults = await payload.find({
       collection: "customers",
@@ -103,6 +111,15 @@ export class PayloadSession {
     issuerName: string,
     payload: BasePayload,
   ) {
+    let redirectResult: {success: boolean, redirect: string} = {success: true, redirect: ''}
+    // Check if redirect_action exists and is a key in redirectFunctions
+    if (accountInfo.redirect_action && this.#redirectFunctions[accountInfo.redirect_action]) {
+      redirectResult = this.#redirectFunctions[accountInfo.redirect_action](accountInfo.redirect_context ?? '', accountInfo)
+      if (!redirectResult.success) {
+        throw new Error("Redirect function failed")
+      }
+    }
+
     const userID = await this.#upsertAccount(
       accountInfo,
       scope,
@@ -143,7 +160,11 @@ export class PayloadSession {
     )
 
     let redirectURL = payload.getAdminURL()
-    if (this.#successPath) {
+    if (redirectResult.redirect) {
+      const newURL = new URL(payload.getAdminURL())
+      newURL.pathname = redirectResult.redirect
+      redirectURL = newURL.toString()
+    } else if (this.#successPath) {
       const newURL = new URL(payload.getAdminURL())
       newURL.pathname = this.#successPath
       redirectURL = newURL.toString()

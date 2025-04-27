@@ -79,6 +79,8 @@ export async function OIDCCallback(
       name: result.name as string,
       email: result.email as string,
       picture: result.picture as string,
+      redirect_action: request.query.redirect_action as string,
+      redirect_context: request.query.redirect_context as string,
     }),
   )
 }

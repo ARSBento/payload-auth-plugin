@@ -2,4 +2,10 @@
 
 # Documentation
 
-Please refer to the [documentations](https://authsmith.com/docs/plugins/payload) for the installation and usages.
+
+
+# Your Package Name
+
+A brief description of what your package does.
+
+## Installation

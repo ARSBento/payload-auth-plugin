@@ -46,7 +46,9 @@ export interface AccountInfo {
   sub: string
   name: string
   picture: string
-  email: string
+  email: string,
+  redirect_action?: string,
+  redirect_context?: string,
   passKey?: {
     credentialId: string
     publicKey?: Uint8Array
