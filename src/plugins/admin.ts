@@ -39,7 +39,7 @@ interface PluginOptions {
   allowSignUp?: boolean
 
   redirectFunctions?: {
-    [key: string]: (redirect_context: string, accountInfo: AccountInfo) => {success: boolean, redirect: string}
+    [key: string]: (redirect_context: string, accountInfo: AccountInfo) => Promise<{success: boolean, redirect: string}>
   }
 }
 

@@ -31,7 +31,7 @@ export async function OAuth2Callback(
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
     "admin",
-    providerConfig.id,
+    providerConfig.id
   )
   const as = authorization_server
 

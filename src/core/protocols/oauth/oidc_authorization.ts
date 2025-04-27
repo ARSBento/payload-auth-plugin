@@ -11,7 +11,7 @@ export async function OIDCAuthorization(
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
     "admin",
-    providerConfig.id,
+    providerConfig.id
   )
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
@@ -32,8 +32,7 @@ export async function OIDCAuthorization(
   const authorizationURL = new URL(as.authorization_endpoint!)
   const redirect_action = request.query.redirect_action as string
   const redirect_context = request.query.redirect_context as string
-  authorizationURL.searchParams.set("redirect_action", redirect_action)
-  authorizationURL.searchParams.set("redirect_context", redirect_context)
+  authorizationURL.searchParams.set("state", redirect_action+'--'+redirect_context)
   authorizationURL.searchParams.set("client_id", client.client_id)
   authorizationURL.searchParams.set("redirect_uri", callback_url.toString())
   authorizationURL.searchParams.set("response_type", "code")

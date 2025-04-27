@@ -20,6 +20,8 @@ function GoogleAuthProvider(config: GoogleAuthConfig): OIDCProviderConfig {
         name: profile.name as string,
         email: profile.email as string,
         picture: profile.picture as string,
+        redirect_action: profile.redirect_action as string,
+        redirect_context: profile.redirect_context as string,
       }
     },
   }

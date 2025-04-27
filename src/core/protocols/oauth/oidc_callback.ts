@@ -1,4 +1,4 @@
-import { parseCookies, type PayloadRequest } from "payload"
+import { countOperation, parseCookies, type PayloadRequest } from "payload"
 import * as oauth from "oauth4webapi"
 import type { AccountInfo, OIDCProviderConfig } from "../../../types.js"
 import { getCallbackURL } from "../../utils/cb.js"
@@ -18,6 +18,11 @@ export async function OIDCCallback(
     throw new MissingOrInvalidSession()
   }
 
+  const state = request.query.state as string
+  const [redirect_action, redirect_context] = state.split('--')
+  console.log(redirect_action, redirect_context)
+
+  
   const { client_id, client_secret, issuer, algorithm, profile } =
     providerConfig
   const client: oauth.Client = {
@@ -27,11 +32,15 @@ export async function OIDCCallback(
   const clientAuth = oauth.ClientSecretPost(client_secret ?? "")
 
   const current_url = new URL(request.url as string) as URL
+
+  current_url.searchParams.delete("state")
+
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
     "admin",
     providerConfig.id,
   )
+
   const issuer_url = new URL(issuer) as URL
 
   const as = await oauth
@@ -79,8 +88,9 @@ export async function OIDCCallback(
       name: result.name as string,
       email: result.email as string,
       picture: result.picture as string,
-      redirect_action: request.query.redirect_action as string,
-      redirect_context: request.query.redirect_context as string,
+      redirect_action,
+      redirect_context,
     }),
+
   )
 }
